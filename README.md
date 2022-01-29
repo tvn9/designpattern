@@ -1,2 +1,2 @@
-# Design Pattern
-Design Pattern Practice in Go
+# Design Patterns
+Design Patterns Practice in Go
