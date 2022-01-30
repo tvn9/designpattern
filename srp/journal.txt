@@ -1,0 +1,2 @@
+1: Hello, Journal!
+2: Testing SRP concept!
