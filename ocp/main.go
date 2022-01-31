@@ -58,6 +58,28 @@ func (f *Filter) FilterByClolor(p []Product, c Color) []*Product {
 	return result
 }
 
+// FilterbySize
+func (f *Filter) FilterbySize(p []Product, s Size) []*Product {
+	result := make([]*Product, 0)
+	for i, v := range p {
+		if v.size == s {
+			result = append(result, &p[i])
+		}
+	}
+	return result
+}
+
+// FilterBySizeColor (Keep adding additional function could violate the OCP principal)
+func (f *Filter) FilterBySizeColor(p []Product, s Size, c Color) []*Product {
+	result := make([]*Product, 0)
+	for i, v := range p {
+		if v.size == s && v.color == c {
+			result = append(result, &p[i])
+		}
+	}
+	return result
+}
+
 /////////// Specification pattern //////////////////
 type Specification interface {
 	IsSatisfied(p *Product) bool
