@@ -1,6 +1,6 @@
 package main
 
-///////////// ISP (Interface Segagation Principle) ////////////////
+///////////// ISP (Interface Segregation Principle) ////////////////
 
 // Print interface
 type Printer interface {
