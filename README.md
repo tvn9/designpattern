@@ -1,2 +1,2 @@
-# Design Patterns
+# SOLID Design Patterns
 Design Patterns Practice in Go
