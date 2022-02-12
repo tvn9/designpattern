@@ -17,13 +17,15 @@ func main() {
 		fmt.Println(t)
 	}
 
+	// Delete entry 2
 	if err := j.DelEntry(2); err != nil {
 		os.Exit(1)
 	}
 
-	j.Save("journal.txt")
+	journal.SaveToFile(&j, "journal1.txt")
 	fmt.Println("After delete")
 	for _, t := range j.Entries {
 		fmt.Println(t)
 	}
+
 }
