@@ -2,8 +2,7 @@ package main
 
 import "fmt"
 
-// OCP - Open for intentiate but close for midification pattern
-// open for extension, close for modification
+// OCP - Type should be open for extension but close for modification
 
 // Color defines Color as an int
 type Color int
