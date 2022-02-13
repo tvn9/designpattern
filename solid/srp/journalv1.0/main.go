@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 )
 
 /////////////////////// Single Responsibility Princile /////////////////////
@@ -22,6 +23,11 @@ var entryCount = 0
 // Journal struct holds a slice of Journal's entries
 type Journal struct {
 	entries []string
+}
+
+// implements Stringer interface
+func (j *Journal) String() string {
+	return strings.Join(j.entries, "\n")
 }
 
 // AddEntry adds an journal item to the list
@@ -55,5 +61,5 @@ func main() {
 	if err := myJournal.DelEntry(2); err != nil {
 		os.Exit(1)
 	}
-	fmt.Println(myJournal)
+	fmt.Println(myJournal.String())
 }
