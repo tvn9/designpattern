@@ -28,17 +28,34 @@ type Person struct {
 	address  string
 }
 
+// Refactor RelationshipBrowser
+// low-level module
+type RelationshipBrowser interface {
+	FindAllChildOf(name string) []*Person
+}
+
 // Relationships struct
 type Relationships struct {
 	// if low level storage has changed, then the code from highlevel will break
 	relations []Info
 }
 
+// FindAllChildOf - refactor
+func (r *Relationships) FindAllChildOf(name string) []*Person {
+	result := make([]*Person, 0)
+	for i, v := range r.relations {
+		if v.relationship == Parent && v.from.name == name {
+			result = append(result, r.relations[i].to)
+		}
+	}
+	return result
+}
+
 // high-level module
 type Research struct {
 	// break DIP
-	relationships Relationships
-	// browser RelationshipBrowser // refactor for DIP
+	// relationships Relationships
+	browser RelationshipBrowser // refactor for DIP
 }
 
 // AddPerentAndChildOf
@@ -49,11 +66,8 @@ func (r *Relationships) AddPerentAndChild(parent, child *Person) {
 
 // Refactor Investigate func below
 func (r *Research) Investigate() {
-	relations := r.relationships.relations // low level dependency
-	for _, rel := range relations {
-		if rel.from.name == "John" && rel.relationship == Parent {
-			fmt.Println("John has a child called", rel.to.name)
-		}
+	for _, rel := range r.browser.FindAllChildOf("John") {
+		fmt.Println("John has a child called", rel.name)
 	}
 }
 
@@ -71,7 +85,9 @@ func main() {
 	relationships.AddPerentAndChild(&parent, &child2)
 	relationships.AddPerentAndChild(&parent, &child3)
 
-	r := Research{relationships}
+	r := Research{&relationships}
 	r.Investigate()
+
+	//
 
 }
