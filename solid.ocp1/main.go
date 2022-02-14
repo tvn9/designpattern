@@ -59,7 +59,8 @@ func (f *Filter) FilterByClolor(p []Product, c Color) []*Product {
 
 // FilterbySize
 func (f *Filter) FilterbySize(p []Product, s Size) []*Product {
-	result := make([]*Product, 0)
+	// result := make([]*Product, 0)
+	result := []*Product{}
 	for i, v := range p {
 		if v.size == s {
 			result = append(result, &p[i])
@@ -79,89 +80,30 @@ func (f *Filter) FilterBySizeColor(p []Product, s Size, c Color) []*Product {
 	return result
 }
 
-/////////// Specification pattern //////////////////
-type Specification interface {
-	IsSatisfied(p *Product) bool
-}
-
-// ColorSpec struct
-type ColorSpec struct {
-	color Color
-}
-
-// IsSatisfied compares ColorSpec field color with Product's
-// color field and return a boolean value
-func (c ColorSpec) IsSatisfied(p *Product) bool {
-	return p.color == c.color
-}
-
-// SizeSpec tructure
-type SizeSpec struct {
-	size Size
-}
-
-// IsSatisfied method compare SizeSpec's size with Product's
-// size field and return a boolean value
-func (s SizeSpec) IsSatisfied(p *Product) bool {
-	return p.size == s.size
-}
-
-// BatterFilter is and empty struct
-type BetterFilter struct{}
-
-// Filter method compares Specification's field to Product's fields
-func (f *BetterFilter) Filter(p []Product, s Specification) []*Product {
-	result := make([]*Product, 0)
-	for i, v := range p {
-		if s.IsSatisfied(&v) {
-			result = append(result, &p[i])
-		}
-	}
-	return result
-}
-
-/////////////////// Composite Specification pattern /////////////////////
-
-// CombineSpec defines first and second fields that the Filter must
-// match in order to satisfy the search
-type CombineSpec struct {
-	first, second Specification
-}
-
-// IsSatisfied compares first and second fields of the Product's
-//
-func (c CombineSpec) IsSatisfied(p *Product) bool {
-	return c.first.IsSatisfied(p) && c.second.IsSatisfied(p)
-}
-
+// program entry
 func main() {
+	// create some products
 	apple := Product{"Apple", green, small}
 	tree := Product{"Tree", green, large}
 	car := Product{"Car", red, large}
-	//
-	products := []Product{apple, tree, car}
+	boat := Product{"Boat", green, medium}
+	// Add proudct to slice of products
+	products := []Product{apple, tree, car, boat}
+
 	fmt.Println(products)
-	fmt.Println("Green products (old):")
+	fmt.Println("Green products (basic):")
 	f := Filter{}
 	for _, v := range f.FilterByClolor(products, green) {
 		fmt.Printf(" - %s green\n", v.name)
 	}
-	//
-	fmt.Println("Green products (new):")
-	greenSpec := ColorSpec{green} // greenSpec variable
-	bf := BetterFilter{}
-	for _, v := range bf.Filter(products, greenSpec) {
-		fmt.Printf(" - %s is green\n", v.name)
+
+	fmt.Println("Medium size products")
+	for _, v := range f.FilterbySize(products, medium) {
+		fmt.Printf(" - %s medium\n", v.name)
 	}
-	// Set the SizeSpec to large and CombineSpec's first = greenSpec, second = large
-	lSpec := SizeSpec{large}
-	lgSpec := CombineSpec{
-		first:  greenSpec, // define online 131 or command // greenSpec variable
-		second: lSpec,
-	}
-	// Print filter results from Filter method
-	fmt.Println("Combine Large & Green products:")
-	for _, v := range bf.Filter(products, lgSpec) {
-		fmt.Printf(" - %s green\n", v.name)
+
+	fmt.Println("Red and Large Products")
+	for _, v := range f.FilterBySizeColor(products, large, red) {
+		fmt.Printf(" - %s large, red\n", v.name)
 	}
 }

@@ -18,10 +18,6 @@ func (r *Rectangle) GetWidth() int {
 }
 
 func (r *Rectangle) SetWidth(w int) {
-	if w <= 0 {
-		fmt.Printf("could not set width = %d\n", w)
-		return
-	}
 	r.width = w
 }
 
@@ -30,35 +26,48 @@ func (r *Rectangle) GetHeight() int {
 }
 
 func (r *Rectangle) SetHeight(h int) {
-	if h <= 0 {
-		fmt.Printf("could not set height = %d\n", 0)
-		return
-	}
 	r.height = h
+}
+
+func (r *Rectangle) NewRectangle(w, h int) *Rectangle {
+	r.width = w
+	r.height = h
+	return &Rectangle{r.width, r.height}
 }
 
 //////////////////// Breaking the List of Substitution Principle //////////////////
 type Square struct {
-	width, height int
+	Rectangle
 }
 
-// This violates the list of subtitution of principle
+// NewSquare
+func NewSquare(l int) *Square {
+	sq := Square{}
+	sq.width = l
+	sq.height = l
+	return &sq
+}
+
+func (s *Square) GetWidth() int {
+	return s.width
+}
 func (s *Square) SetWidth(w int) {
-	s.width = w  // This is where the problem comes in
-	s.height = w // the code tried to enforce both the hight and width to the same value
+	s.width = w  // to enforce that the object is a square we set both width and height
+	s.height = w // to the same value
+}
+func (s *Square) GetHeight() int {
+	return s.height
 }
 func (s *Square) SetHeight(h int) {
-	s.height = h
-	s.width = h
+	s.height = h // same here to enforce the share is the square we set
+	s.width = h  // the width and height to same value
 }
 
 // UseIt
 func UseIt(s Sized) {
-	s.SetWidth(10)
-	s.SetHeight(20)
-	w := s.GetWidth()
-	h := s.GetHeight()
-	expectedArea := w * h
+	width := s.GetWidth()
+	s.SetHeight(10)
+	expectedArea := 10 * width
 	actualArea := s.GetWidth() * s.GetHeight()
 	fmt.Println("Expected an area of", expectedArea, "but got", actualArea)
 }
@@ -67,7 +76,7 @@ func main() {
 	// make a Rectangle
 	rec := &Rectangle{2, 3}
 	UseIt(rec)
-	//
 
-	//
+	sq := NewSquare(5)
+	UseIt(sq)
 }
