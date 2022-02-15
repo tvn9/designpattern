@@ -61,8 +61,6 @@ func (b *HTMLBuilder) AddChild(chName, chText string) {
 func main() {
 	nb := NewHTMLBuilder("html")
 	nb.AddChild("head", "")
-	nb.AddChild("body", "")
-	nb.AddChild("h1", "Hello Builder Design Pattern")
-	nb.AddChild("p", "Design pattern is a mazing and fund to learn")
+	nb.AddChild("body", "<h1>Hello Builder Design Patter</h1><p>Design patter is amazin and fun to learn</p>")
 	fmt.Println(nb.String())
 }
