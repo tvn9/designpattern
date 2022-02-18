@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"bytes"
+	"encoding/gob"
+	"fmt"
+)
 
 // Deep Copying Pattern
 
@@ -14,23 +18,16 @@ type Person struct {
 	Friends []string
 }
 
-//
-func (a *Address) DeepCopy() *Address {
-	return &Address{
-		a.StreetAddress,
-		a.City,
-		a.State,
-		a.ZipCode,
-		a.Country,
-	}
-}
-
-//
+// DeepCopy make copy object through serialization
 func (p *Person) DeepCopy() *Person {
-	q := *p
-	q.Address = p.Address.DeepCopy()
-	copy(q.Friends, p.Friends)
-	return &q
+	b := bytes.Buffer{}
+	e := gob.NewEncoder(&b)
+	_ = e.Encode(p)
+
+	d := gob.NewDecoder(&b)
+	result := Person{}
+	_ = d.Decode(&result)
+	return &result
 }
 
 func main() {
@@ -52,6 +49,9 @@ func main() {
 	tim := mark.DeepCopy()
 	tim.Name = "Tim"
 
+	fmt.Println(mark, mark.Address)
+	fmt.Println(chris, chris.Address)
+
 	chris.Address = &Address{
 		StreetAddress: "555 St.",
 		City:          "Sun City",
@@ -64,5 +64,6 @@ func main() {
 	tim.Address = &Address{"666 Ave", "Daily City", "Ca", "95322", "USA"}
 	tim.Friends = append(tim.Friends, "Chris", "Time", "Mike")
 
-	fmt.Println(mark, chris, tim)
+	fmt.Println(chris, chris.Address)
+	fmt.Println(tim, tim.Address)
 }
