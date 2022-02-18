@@ -40,6 +40,7 @@ func (b *EmailBuilder) Body(body string) *EmailBuilder {
 
 func sendEmailImpl(email *email) {
 	// actual sends the email
+	fmt.Println(email)
 }
 
 type build func(*EmailBuilder)
@@ -47,7 +48,7 @@ type build func(*EmailBuilder)
 func SendEmail(action build) {
 	builder := EmailBuilder{}
 	action(&builder)
-	sendMailImpl(&builder.email)
+	sendEmailImpl(&builder.email)
 }
 
 func main() {
