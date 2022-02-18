@@ -15,12 +15,12 @@ type EmployeeFactory struct {
 	Salary   int
 }
 
-//
+// Create method creates the Employee
 func (f *EmployeeFactory) Create(name string) *Employee {
 	return &Employee{name, f.Position, f.Salary}
 }
 
-//
+// NewEmployeeFactory function create NewEmployeeFactory
 func NewEmployeeFactory(position string, salary int) *EmployeeFactory {
 	return &EmployeeFactory{position, salary}
 }
