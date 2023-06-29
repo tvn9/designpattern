@@ -61,8 +61,8 @@ func (l *LinkedList) AddToHead(val int) {
 	l.SetNodeLocation()
 }
 
-// Push insert the Node to the Head if the linkedlist is not exist, otherwise add to end of the LinkedList
-func (l *LinkedList) Push(val int) {
+// Insert inserts the Node to the Head if the linkedlist is not exist, otherwise add to end of the LinkedList
+func (l *LinkedList) Insert(val int) {
 	// Initialize and add Data to the new Node
 	node := &Node{}
 	node.data = val
@@ -125,6 +125,20 @@ func (l *LinkedList) PrintLinkedList() {
 	fmt.Println("")
 }
 
+func (l *LinkedList) AddToLast(val int) {
+	// Initialize a new Node
+	node := &Node{}
+	node.data = val
+	node.next = nil
+
+	if l.tail != nil {
+		l.tail.next = node
+	}
+	l.tail = node
+	l.SetNodeLocation()
+}
+
+// IterateList cycle through the LinkedList and print out list info
 func (l *LinkedList) IterateList() {
 	i := 1
 	node := &Node{}
@@ -134,6 +148,34 @@ func (l *LinkedList) IterateList() {
 	}
 }
 
+func (l *LinkedList) SearchNode(val int) *Node {
+	node := &Node{}
+
+	if l.head != nil {
+		for node = l.head; node != nil; node = node.next {
+			if node.data == val {
+				return node
+			}
+		}
+	}
+	return node
+}
+
+// FistNode returns the first node
+func (l *LinkedList) FirstNode() *Node {
+	return l.head
+}
+
+// NextNode returns the next node
+func (l *LinkedList) NextNode() *Node {
+	return l.head.next
+}
+
+// LastNode returns the last node
+func (l *LinkedList) LastNode() *Node {
+	return l.tail
+}
+
 // Program starting point
 func main() {
 	// 1. Create a linked list
@@ -141,7 +183,7 @@ func main() {
 
 	fmt.Println("----- Testing Push, whern there is no list exist -----")
 	fmt.Println("----- Expected push to create a new list ------")
-	list.Push(1111)
+	list.Insert(1111)
 	list.PrintLinkedList()
 
 	fmt.Println("------ Create a new List ------")
@@ -149,11 +191,11 @@ func main() {
 	list.PrintLinkedList()
 
 	fmt.Println("------ Push 1, 2, 3, 4, 5 ------")
-	list.Push(1)
-	list.Push(2) // Will not work, there is already a linked list
-	list.Push(3) // Will add 2 to the beginig of the list, and push 1 to the nextNode
-	list.Push(4)
-	list.Push(5)
+	list.Insert(1)
+	list.Insert(2) // Will not work, there is already a linked list
+	list.Insert(3) // Will add 2 to the beginig of the list, and push 1 to the nextNode
+	list.Insert(4)
+	list.Insert(5)
 	list.PrintLinkedList()
 
 	fmt.Println("----- AddAfter(2, 888)")
@@ -170,6 +212,27 @@ func main() {
 	fmt.Println("----- AddAfter 3, 666 -----")
 	list.AddAfter(3, 666)
 	list.PrintLinkedList()
+
+	fmt.Println("----- AddToLast -----")
+	list.AddToLast(10)
+	list.PrintLinkedList()
+
+	fmt.Println("----- FistNode -----")
+	fn := list.FirstNode()
+	fmt.Printf("First Node %p | Data: %d\n", fn, fn.data)
+
+	fmt.Println("----- NextNode -----")
+	nn := list.NextNode()
+	fmt.Printf("Next Node %p | Data: %d\n", nn, nn.data)
+
+	fmt.Println("----- LastNode -----")
+	ln := list.LastNode()
+	fmt.Printf("Last Node: %p | Data: %d\n", ln, ln.data)
+
+	num := 5
+	fmt.Println("----- SearchNode -----")
+	sn := list.SearchNode(num)
+	fmt.Printf("Search %d found %d Node Address: %p\n", num, sn.data, sn)
 }
 
 // Create a single list without looking at code example, use only the theory
