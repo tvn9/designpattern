@@ -29,14 +29,37 @@ func (l *LinkedList) CreateLinkedList(val int) {
 		l.head = node
 		l.tail = node
 		// add node address to a linked list lists[] for tracking purpose
-		l.lists = append(l.lists, node)
+		l.SetNodeLocation()
 	} else {
 		// print this message when the is an existing linked list
 		fmt.Println("cannot creat new list, because there is an existing list", l.lists)
 	}
 }
 
-//
+func (l *LinkedList) SetNodeLocation() {
+	node := &Node{}
+	if l.head != nil {
+		l.lists = nil
+		for node = l.head; node != nil; node = node.next {
+			l.lists = append(l.lists, node)
+		}
+	}
+}
+
+// AddToHead add a node to the head of the LinkedList
+func (l *LinkedList) AddToHead(val int) {
+	// Initialize a assign value to a new Node
+	node := &Node{}
+	node.data = val
+	node.next = nil
+	if l.head != nil {
+		node.next = l.head
+	} else {
+		fmt.Println("list does not exist.")
+	}
+	l.head = node
+	l.SetNodeLocation()
+}
 
 // Push insert the Node to the Head if the linkedlist is not exist, otherwise add to end of the LinkedList
 func (l *LinkedList) Push(val int) {
@@ -52,27 +75,28 @@ func (l *LinkedList) Push(val int) {
 		l.head = node
 	}
 	l.tail = node
-	l.lists = append(l.lists, node)
+	l.SetNodeLocation()
 }
 
-func (l *LinkedList) NodeWithValue(val int) *Node {
-	var node *Node
-	for _, v := range l.lists {
-		if v.data == val {
-			node = v
+// NodeWithValue returns existing *Node based on input value
+func (l *LinkedList) GetNodePosition(p int) *Node {
+	node := &Node{}
+	for i := range l.lists {
+		if i == p {
+			return node
 		}
 	}
 	return node
 }
 
-func (l *LinkedList) AddAfter(nodeVal, val int) {
+// AddAfter insert a node after a predidefined node in an existing LinkedList
+func (l *LinkedList) AddAfter(position, val int) {
 	// Initialize and add data to the new Node
 	node := &Node{}
 	node.data = val
 	node.next = nil
-
-	for _, v := range l.lists {
-		if v.data == nodeVal {
+	for i, v := range l.lists {
+		if i == position {
 			node.next = v.next
 			v.next = node
 		}
@@ -84,8 +108,7 @@ func (l *LinkedList) AddAfter(nodeVal, val int) {
 			nodeWithVal.next = node
 		}
 	*/
-
-	l.lists = append(l.lists, node)
+	l.SetNodeLocation()
 }
 
 // PrintLinkedList iterates through the LinkedList and print the LinkedList data
@@ -96,12 +119,10 @@ func (l *LinkedList) PrintLinkedList() {
 	fmt.Printf("Tail: %p\n", l.tail)
 	fmt.Printf("Linked List length: %d\n", len(l.lists))
 	fmt.Println("Linked List node addresses")
-	i := 1
-	node := &Node{}
-	for node = l.head; node != nil; node = node.next {
-		fmt.Printf("#%d: Head: %p | Tail: %p | Pointer: %p | NextNode: %p | Data:%d\n", i, l.head, l.tail, node, node.next, node.data)
-		i++
+	for i, v := range l.lists {
+		fmt.Printf("#%d: Head: %p | Tail: %p | Pointer: %p | NextNode: %p | Data:%d\n", i, l.head, l.tail, v, v.next, v.data)
 	}
+	fmt.Println("")
 }
 
 func (l *LinkedList) IterateList() {
@@ -118,24 +139,37 @@ func main() {
 	// 1. Create a linked list
 	list := LinkedList{}
 
-	list.CreateLinkedList(999)
+	fmt.Println("----- Testing Push, whern there is no list exist -----")
+	fmt.Println("----- Expected push to create a new list ------")
+	list.Push(1111)
+	list.PrintLinkedList()
 
+	fmt.Println("------ Create a new List ------")
+	list.CreateLinkedList(999)
+	list.PrintLinkedList()
+
+	fmt.Println("------ Push 1, 2, 3, 4, 5 ------")
 	list.Push(1)
 	list.Push(2) // Will not work, there is already a linked list
 	list.Push(3) // Will add 2 to the beginig of the list, and push 1 to the nextNode
 	list.Push(4)
 	list.Push(5)
-
-	list.IterateList()
-	fmt.Printf("Number of nodes %d\n", len(list.lists))
-
-	list.AddAfter(2, 888)
-
-	list.IterateList()
-	fmt.Printf("Number of nodes %d\n", len(list.lists))
-
 	list.PrintLinkedList()
 
+	fmt.Println("----- AddAfter(2, 888)")
+	list.AddAfter(2, 888)
+	list.PrintLinkedList()
+
+	// Add a node to the head
+	fmt.Println("------ AddToHead 555, 888, 555 ----- Testing duplicate value")
+	list.AddToHead(555)
+	list.AddToHead(888)
+	list.AddToHead(555)
+	list.PrintLinkedList()
+
+	fmt.Println("----- AddAfter 3, 666 -----")
+	list.AddAfter(3, 666)
+	list.PrintLinkedList()
 }
 
 // Create a single list without looking at code example, use only the theory
