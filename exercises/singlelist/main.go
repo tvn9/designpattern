@@ -122,6 +122,7 @@ func (l *LinkedList) PrintLinkedList() {
 	for i, v := range l.lists {
 		fmt.Printf("#%d: Head: %p | Tail: %p | Pointer: %p | NextNode: %p | Data:%d\n", i, l.head, l.tail, v, v.next, v.data)
 	}
+	l.SetNodeLocation()
 	fmt.Println("")
 }
 
@@ -138,22 +139,37 @@ func (l *LinkedList) AddToLast(val int) {
 	l.SetNodeLocation()
 }
 
+func (l *LinkedList) DeleteNode(val int, position int) {
+	if l.head != nil {
+		// Find the node targeted for delete
+		for i, v := range l.lists {
+			// Compare the search parameter with current node values and position
+			if position == i && val == v.data {
+				// remove the node by re-assign the linkedlist's head and next pointers
+				l.lists[i-1].next = v.next
+			}
+		}
+		l.SetNodeLocation()
+	}
+}
+
 // IterateList cycle through the LinkedList and print out list info
 func (l *LinkedList) IterateList() {
 	i := 1
-	node := &Node{}
+	var node *Node
 	for node = l.head; node != nil; node = node.next {
 		fmt.Printf("#%d: Head: %p | Tail: %p | Pointer: %p | NextNode: %p | Data:%d\n", i, l.head, l.tail, node, node.next, node.data)
 		i++
 	}
 }
 
+// SearchNode
 func (l *LinkedList) SearchNode(val int) *Node {
-	node := &Node{}
-
+	var node *Node
 	if l.head != nil {
-		for node = l.head; node != nil; node = node.next {
+		for node := l.head; node != nil; node = node.next {
 			if node.data == val {
+				// fmt.Printf("Search %d, Found %d, Address %p\n", val, node.data, node)
 				return node
 			}
 		}
@@ -229,10 +245,26 @@ func main() {
 	ln := list.LastNode()
 	fmt.Printf("Last Node: %p | Data: %d\n", ln, ln.data)
 
-	num := 5
+	num := 555
 	fmt.Println("----- SearchNode -----")
-	sn := list.SearchNode(num)
-	fmt.Printf("Search %d found %d Node Address: %p\n", num, sn.data, sn)
+	n := list.SearchNode(num)
+	fmt.Printf("Search %d - Found %d - Address: %p\n", num, n.data, n)
+
+	nodes := []int{888, 555, 1111, 666, 1, 2, 3, 4, 5, 10, 555}
+	fmt.Println("----- Search multiple nodes -----")
+	for _, n := range nodes {
+		node := list.SearchNode(n)
+		fmt.Printf("Search %d - Found %d - Address: %p\n", n, node.data, node)
+	}
+	list.IterateList()
+
+	// Delete a node
+	list.DeleteNode(666, 4)
+	list.PrintLinkedList()
+
+	list.DeleteNode(888, 6)
+	list.PrintLinkedList()
+
 }
 
 // Create a single list without looking at code example, use only the theory
