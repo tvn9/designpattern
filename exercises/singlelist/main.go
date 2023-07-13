@@ -164,17 +164,19 @@ func (l *LinkedList) IterateList() {
 }
 
 // SearchNode
-func (l *LinkedList) SearchNode(val int) *Node {
+func (l *LinkedList) SearchNode(val int) bool {
 	var node *Node
+	var result bool
 	if l.head != nil {
-		for node := l.head; node != nil; node = node.next {
+		for node = l.head; node != nil; node = node.next {
 			if node.data == val {
 				// fmt.Printf("Search %d, Found %d, Address %p\n", val, node.data, node)
-				return node
+				result = true
+				break
 			}
 		}
 	}
-	return node
+	return result
 }
 
 // FistNode returns the first node
@@ -248,13 +250,17 @@ func main() {
 	num := 555
 	fmt.Println("----- SearchNode -----")
 	n := list.SearchNode(num)
-	fmt.Printf("Search %d - Found %d - Address: %p\n", num, n.data, n)
+	fmt.Println("Item found =", n)
 
 	nodes := []int{888, 555, 1111, 666, 1, 2, 3, 4, 5, 10, 555}
 	fmt.Println("----- Search multiple nodes -----")
 	for _, n := range nodes {
-		node := list.SearchNode(n)
-		fmt.Printf("Search %d - Found %d - Address: %p\n", n, node.data, node)
+		result := list.SearchNode(n)
+		if result {
+			fmt.Println("Item found", n)
+		} else {
+			fmt.Println("Item not found")
+		}
 	}
 	list.IterateList()
 
