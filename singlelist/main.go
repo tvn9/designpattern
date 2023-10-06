@@ -5,66 +5,71 @@ import (
 	"fmt"
 )
 
+// Node data structure
 type Node struct {
-	number   int
-	nextNode *Node
+	value int
+	next  *Node
 }
 
+// LinkedList data structure
 type LinkedList struct {
-	headNode *Node
-	nodes    int
+	head  *Node
+	tail  *Node
+	nodes int
 }
 
+// AddToHead adds the new node to beginning of the list
 func (l *LinkedList) AddToHead(val int) {
 	var node = Node{}
-	node.number = val
-	node.nextNode = nil
+	node.value = val
+	node.next = nil
 
-	if l.headNode != nil {
-		node.nextNode = l.headNode
+	if l.head != nil {
+		node.next = l.head
 	}
-	l.headNode = &node
+	l.head = &node
+	l.tail = &node
 	l.nodes++
 }
 
-// AddToEnd adds the node with value to the end of the list
+// AddToEnd adds the new node with value to the end of the list
 func (l *LinkedList) AddToEnd(val int) {
 	var lastNode *Node
 	node := &Node{}
-	node.number = val
-	node.nextNode = nil
+	node.value = val
+	node.next = nil
 	lastNode = l.LastNode()
 	if lastNode != nil {
-		lastNode.nextNode = node
+		lastNode.next = node
 	}
 	l.nodes++
 }
 
 // NodeWithValue returns Node given parameter value
-func (l *LinkedList) NodeWithValue(nval int) *Node {
-	var node, nodeWith *Node
+func (l *LinkedList) NodeWithValue(val int) *Node {
+	var node, nodeWithVal *Node
 
-	for node = l.headNode; node != nil; node = node.nextNode {
-		if node.number == nval {
-			nodeWith = node
+	for node = l.head; node != nil; node = node.next {
+		if node.value == val {
+			nodeWithVal = node
 			break
 		}
 	}
-	return nodeWith
+	return nodeWithVal
 }
 
 // AddAfter addes a node with value after a given node in the list
-func (l *LinkedList) AddAfter(nval int, val int) {
-	var nodeWith *Node
+func (l *LinkedList) AddAfter(nodeVal int, val int) {
+	var nodeWithVal *Node
 	node := &Node{}
 
-	node.number = val
-	node.nextNode = nil
+	node.value = val
+	node.next = nil
 
-	nodeWith = l.NodeWithValue(nval)
-	if nodeWith != nil {
-		node.nextNode = nodeWith.nextNode
-		nodeWith.nextNode = node
+	nodeWithVal = l.NodeWithValue(nodeVal)
+	if nodeWithVal != nil {
+		node.next = nodeWithVal.next
+		nodeWithVal.next = node
 	}
 	l.nodes++
 }
@@ -72,33 +77,29 @@ func (l *LinkedList) AddAfter(nval int, val int) {
 // IterateList method iterates over Linkedlist
 func (l *LinkedList) IterateList() {
 	var node *Node
-	for node = l.headNode; node != nil; node = node.nextNode {
-		fmt.Println(node.number)
+	for node = l.head; node != nil; node = node.next {
+		fmt.Println(&node.value, node.value)
 	}
 }
 
 // FirstNode returns the first Node in the linkedlist
 func (l *LinkedList) HeadNode() *Node {
-	return l.headNode
+	return l.head
 }
 
 func (n *Node) NextNode() *Node {
-	return n.nextNode
+	return n.next
 }
 
 // LastNode returns the last Node
 func (l *LinkedList) LastNode() *Node {
-	var node, lastNode *Node
-	for node = l.headNode; node != nil; node = node.nextNode {
-		if node.nextNode == nil {
-			lastNode = node
+	var node *Node
+	for node = l.head; node != nil; node = node.next {
+		if node.next == nil {
+			l.tail = node
 		}
 	}
-	return lastNode
-}
-
-func (l *LinkedList) Insert(data int) {
-
+	return l.tail
 }
 
 func main() {
@@ -106,23 +107,12 @@ func main() {
 	list := LinkedList{}
 
 	list.AddToHead(1)
-	list.AddToHead(2)
-
-	list.AddAfter(1, 3)
-	list.AddAfter(3, 4)
-	list.AddToEnd(5)
-	list.AddToEnd(6)
-
-	h := list.HeadNode()
-	n := list.headNode.NextNode()
-
-	fmt.Println("First", h.number)
-	fmt.Println("Next", n.number)
-	fmt.Println("Number of nodes:", list.nodes)
+	list.AddToEnd(2)
+	list.AddToEnd(3)
+	list.AddToEnd(4)
+	list.AddToEnd(9)
 
 	list.IterateList()
 
-	lastNode := list.LastNode()
-
-	fmt.Println("Last Node ", lastNode.number)
+	fmt.Println(list.LastNode())
 }
