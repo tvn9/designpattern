@@ -1,3 +1,3 @@
-module github.com/tvn9/dsgo1
+module www.github.com/tvn9/dsgo1
 
-go 1.20
+go 1.21.1
